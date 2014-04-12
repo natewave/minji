@@ -1,7 +1,5 @@
 package models
 
-
-
 sealed trait Order {
   val qty: Double
   val side: Side
