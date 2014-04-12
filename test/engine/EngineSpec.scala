@@ -22,15 +22,18 @@ class EngineSpec extends Specification {
       // BTC/USD
 
       // limit buy 1btc at 100$
-      val limitBuy = LimitOrder(Buy(BTC), 1, 100)
+      val limitBuy = LimitOrder(Buy, 1, 100)
+      val limitBuy2 = LimitOrder(Buy, 0.5, 180)
 
 
       // limit sell 1btc at 150$
-      val limitSell = LimitOrder(Sell(BTC), 1, 150)
+      val limitSell = LimitOrder(Sell, 1, 150)
+      val limitSell2 = LimitOrder(Sell, 2, 100)
 
+      val orderTypes = OrderType.all()
 
-      val buyOrderBook = new OrderBook(Buy(BTC), OrderType.all())
-      val sellOrderBook = new OrderBook(Buy(BTC), OrderType.all())
+      val buyOrderBook = new OrderBook(Buy, orderTypes)
+      val sellOrderBook = new OrderBook(Buy, orderTypes)
 
       buyOrderBook.bestLimit should beNone
       buyOrderBook.orders() should beEmpty
@@ -43,6 +46,19 @@ class EngineSpec extends Specification {
 
       sellOrderBook.add(limitSell)
 
+
+      val matchingEngine = new MatchingEngine(buyOrderBook, sellOrderBook, orderTypes)
+
+      matchingEngine.subscribe(new matchingEngine.Sub {
+        def notify(pub: matchingEngine.Pub, event: OrderBookEvent) {
+          println(event)
+        }
+      })
+
+      matchingEngine.acceptOrder(limitBuy2)
+      matchingEngine.acceptOrder(limitBuy2)
+      matchingEngine.acceptOrder(limitBuy2)
+      matchingEngine.acceptOrder(limitSell2)
 
 
       1 shouldEqual 1

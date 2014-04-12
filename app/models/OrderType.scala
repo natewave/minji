@@ -16,8 +16,8 @@ object OrderType {
       def price: PriceLevel = LimitPrice(limit)
 
       def isFulfillable(price: Double): Boolean = side match {
-        case b: Buy => price <= limit
-        case s: Sell => price >= limit
+        case Buy => price <= limit
+        case Sell => price >= limit
       }
 
       override def remaining(qty: Double): LimitOrder = self.copy(qty = self.qty - qty)
