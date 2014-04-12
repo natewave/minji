@@ -31,14 +31,14 @@ class OrderBook(side: Side, orderTypes: (Order => OrderType)) {
   def decreaseTopBy(qty: Double) {
 
     marketBook match {
-      case top :: tail => marketBook = if (qty == top.qty) tail else orderTypes(top).decreasedBy(qty) :: tail
+      case top :: tail => marketBook = if (qty == top.qty) tail else orderTypes(top).remaining(qty) :: tail
       case _ => limitBook match {
         case ((level, orders) :: tail) => {
           val (top :: rest) = orders
           limitBook = (qty == top.qty, rest.isEmpty) match {
             case (true, true) => tail
             case (true, false) => (level, rest) :: tail
-            case _ => (level, orderTypes(top).decreasedBy(qty) :: rest) :: tail
+            case _ => (level, orderTypes(top).remaining(qty) :: rest) :: tail
           }
         }
         case Nil => throw new IllegalStateException()
