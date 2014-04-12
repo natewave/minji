@@ -2,53 +2,57 @@
 
 # --- !Ups
 
-CREATE TYPE side        AS ENUM ('buy', 'sell');
-CREATE TYPE currency    AS ENUM ('btc', 'usd', 'eur');
+CREATE TYPE buysell   AS ENUM ('buy', 'sell');
+CREATE TYPE currency  AS ENUM ('btc', 'usd', 'eur');
 CREATE TYPE market    AS ENUM ('btcusd', 'usdeur', 'btceur');
 
 create table if not exists account (
-    id                      bigserial not null PRIMARY KEY,
-    username                varchar(255) not null unique,
-    password                varchar(255) not null,
+    id                      bigserial NOT NULL PRIMARY KEY,
+    username                varchar(255) NOT NULL unique,
+    password                varchar(255) NOT NULL,
     email                   varchar(255) unique,
     created_at              timestamp
 );
 
 create table if not exists limit_order (
     id                      bigserial NOT NULL PRIMARY KEY,
-    qty                     bigint not null,
-    limit_price             bigint not null,
-    market                  market not null,
-    side                    side not null,
-    created_at              time_stamp not null,
-    created_by              bigint not null references account(id) on delete set cascade
+    qty                     bigint NOT NULL,
+    limit_price             bigint NOT NULL,
+    market                  market NOT NULL,
+    side                    buysell NOT NULL,
+    created_at              timestamp NOT NULL,
+    created_by              bigint NOT NULL references account(id)
 );
 
 create table if not exists balance (
-    id                      bigserial not null  PRIMARY KEY,
-    currency                currency not null,
+    id                      bigserial NOT NULL  PRIMARY KEY,
+    currency                currency NOT NULL,
     balance                 bigint default 0,
-    account_id              bigint not null references account(id) on delete set cascade
+    account_id              bigint NOT NULL references account(id)
 );
 
 create table if not exists trade (
-    id                      bigserial not null  PRIMARY KEY,
-    qty                     bigint not null,
+    id                      bigserial NOT NULL  PRIMARY KEY,
+    qty                     bigint NOT NULL,
     price                   bigint NOT NULL,
     market                  market NOT NULL
 );
 
 create table if not exists trade_history (
     id                      bigserial NOT NULL,
-    trade_id                bigint NOT NULL references trade(id) on delete set cascade,
-    account_id              bigInt NOT NULL references trade(id) on delete set cascade,
-    side                    side NOT NULL
+    trade_id                bigint NOT NULL references trade(id),
+    account_id              bigInt NOT NULL references trade(id),
+    side                    buysell NOT NULL
 );
 
 # --- !Downs
 
-drop table if exists trade_history;
-drop table if exists trade;
-drop table if exists balance;
-drop table if exists limit_order;
-drop table if exists account;
+DROP TABLE if exists trade_history;
+DROP TABLE if exists trade;
+DROP TABLE if exists balance;
+DROP TABLE if exists limit_order;
+DROP TABLE if exists account;
+DROP TYPE buysell;
+DROP TYPE currency;
+DROP TYPE MARKET;
+
