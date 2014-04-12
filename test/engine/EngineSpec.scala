@@ -22,14 +22,27 @@ class EngineSpec extends Specification {
       // BTC/USD
 
       // limit buy 1btc at 100$
-      LimitOrder(Buy, 1, 100)
+      val limitBuy = LimitOrder(Buy(BTC), 1, 100)
 
 
       // limit sell 1btc at 150$
-      LimitOrder(Sell, 1, 150)
+      val limitSell = LimitOrder(Sell(BTC), 1, 150)
 
 
-      // LTC/USD
+      val buyOrderBook = new OrderBook(Buy(BTC), OrderType.all())
+      val sellOrderBook = new OrderBook(Buy(BTC), OrderType.all())
+
+      buyOrderBook.bestLimit should beNone
+      buyOrderBook.orders() should beEmpty
+      buyOrderBook.top should beNone
+
+      buyOrderBook.add(limitBuy)
+
+      buyOrderBook.bestLimit should beSome(limitBuy.limit)
+      buyOrderBook.top should beSome(limitBuy)
+
+      sellOrderBook.add(limitSell)
+
 
 
       1 shouldEqual 1
