@@ -2,8 +2,9 @@ package models
 
 sealed trait OrderBookEvent
 
-case class Trade(buyingBroker: String, sellingBroker: String,
-  price: Double, qty: Double) extends OrderBookEvent
+case class Trade(order: Order) extends OrderBookEvent
+
+case class PlacedOrder(order: Order) extends OrderBookEvent
 
 case class RejectedOrder(order: Order) extends OrderBookEvent
 
