@@ -1,4 +1,4 @@
-package minji
+package models
 
 trait Coin
 

@@ -1,7 +1,9 @@
 package models
 
-trait Side
+sealed trait Side {
+    val coin: Coin
+}
 
-case object Buy extends Side
+case class Buy(coin: Coin) extends Side
 
-case object Sell extends Side
+case class Sell(coin: Coin) extends Side
