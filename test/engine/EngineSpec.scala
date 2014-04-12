@@ -17,7 +17,6 @@ class EngineSpec extends Specification {
   "Application" should {
 
     "test" in {
-      1 shouldEqual 1
 
 
       // BTC/USD
@@ -33,6 +32,7 @@ class EngineSpec extends Specification {
       // LTC/USD
 
 
+      1 shouldEqual 1
     }
   }
 }
